@@ -17,12 +17,7 @@
 package com.codelabs.state.todo
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -124,28 +119,40 @@ fun TodoItemInput(
     onItemComplete: (TodoItem) -> Unit
 ) {
 //
-    val (text, setText) = remember { mutableStateOf("") }
-//    onItemComplete is an event will fire when an item is completed by the user
+    val (text, setText) = remember { mutableStateOf("") } // state variable for text
+    val (icon, setIcon) = remember { mutableStateOf(TodoIcon.Default) } // state variable for icon
+    val iconVisible = text.isNotBlank()
+    val submit = {
+        onItemComplete(TodoItem(task = text, icon = icon))
+        setIcon(TodoIcon.Default)
+        setText("")
+
+    }
     Column {
         Row(
             Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
         ) {
+            if (iconVisible) {
+                AnimatedIconRow(icon = icon, onIconChange = setIcon, Modifier.padding(top = 8.dp))
+            } else {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
             TodoInputText(
                 text = text,
                 onTextChange = setText,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp),
+                onImeAction = submit
 
             )
             TodoEditButton(
-                onClick = {
-                    onItemComplete(TodoItem(text))
-                },
+                onClick = submit,
                 text = "Add",
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier.align(Alignment.CenterVertically),
+                enabled = text.isNotBlank()
             )
 
         }
