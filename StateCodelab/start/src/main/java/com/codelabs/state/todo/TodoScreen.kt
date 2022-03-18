@@ -42,8 +42,12 @@ import kotlin.random.Random
 @Composable
 fun TodoScreen(
     items: List<TodoItem>,
+    currentlyEditing: TodoItem?,
     onAddItem: (TodoItem) -> Unit,
-    onRemoveItem: (TodoItem) -> Unit
+    onRemoveItem: (TodoItem) -> Unit,
+    onStartEdit: (TodoItem) -> Unit,
+    onEditItemChange: (TodoItem) -> Unit,
+    onEditDone: () -> Unit
 ) {
 
     Column {
@@ -129,9 +133,9 @@ fun TodoItemEntryInput(
 
     }
     TodoItemInput(
-        text=text,
+        text = text,
         onTextChange = setText,
-        icon= icon,
+        icon = icon,
         onIconChange = setIcon,
         submit = submit,
         iconVisible = iconVisible
@@ -192,7 +196,7 @@ fun PreviewTodoScreen() {
         TodoItem("Apply state", TodoIcon.Done),
         TodoItem("Build dynamic UIs", TodoIcon.Square)
     )
-    TodoScreen(items, {}, {})
+    TodoScreen(items, null, {}, {}, {}, {}, {})
 }
 
 @Preview
