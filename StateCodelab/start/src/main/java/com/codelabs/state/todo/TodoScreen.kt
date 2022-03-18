@@ -51,7 +51,7 @@ fun TodoScreen(
             elevate = true,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TodoItemInput(onItemComplete = onAddItem)
+            TodoItemEntryInput(onItemComplete = onAddItem)
         }
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -115,7 +115,7 @@ private fun randomTint(): Float {
 
 
 @Composable
-fun TodoItemInput(
+fun TodoItemEntryInput(
     onItemComplete: (TodoItem) -> Unit
 ) {
 //
@@ -128,6 +128,25 @@ fun TodoItemInput(
         setText("")
 
     }
+    TodoItemInput(
+        text=text,
+        onTextChange = setText,
+        icon= icon,
+        onIconChange = setIcon,
+        submit = submit,
+        iconVisible = iconVisible
+    )
+}
+
+@Composable
+fun TodoItemInput(
+    text: String,
+    onTextChange: (String) -> Unit,
+    icon: TodoIcon,
+    onIconChange: (TodoIcon) -> Unit,
+    submit: () -> Unit,
+    iconVisible: Boolean
+) {
     Column {
         Row(
             Modifier
@@ -135,13 +154,17 @@ fun TodoItemInput(
                 .padding(top = 16.dp)
         ) {
             if (iconVisible) {
-                AnimatedIconRow(icon = icon, onIconChange = setIcon, Modifier.padding(top = 8.dp))
+                AnimatedIconRow(
+                    icon = icon,
+                    onIconChange = onIconChange,
+                    Modifier.padding(top = 8.dp)
+                )
             } else {
                 Spacer(modifier = Modifier.height(16.dp))
             }
             TodoInputText(
                 text = text,
-                onTextChange = setText,
+                onTextChange = onTextChange,
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -183,5 +206,5 @@ fun PreviewTodoRow() {
 @Preview
 @Composable
 fun PreviewTodoItemInput() {
-    TodoItemInput(onItemComplete = {})
+    TodoItemEntryInput(onItemComplete = {})
 }
